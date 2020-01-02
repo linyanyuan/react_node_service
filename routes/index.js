@@ -11,5 +11,8 @@ router.get('/', function(req, res, next) {
 router.get('/api/login',function(req,res,next){
 	login.login(req,res,next)
 })
-
+// 获取本月数据
+router.get('/api/getPayReal',function(req,res,next){
+	login.getPayReal(req,res,next)
+})
 module.exports = router;

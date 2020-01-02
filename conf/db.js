@@ -4,6 +4,9 @@ module.exports={
 		host: 'localhost', 
         user: 'root',
         password: '123456',
-        database:'test' // 前面建的user表位于些数据库中
+        // centos dms账号数据库        
+        // user: 'dms',
+        // password: 'Yuan15601151627@',
+        database:'reactserver' // 前面建的user表位于些数据库中
 	}
 }

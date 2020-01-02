@@ -22,15 +22,14 @@ module.exports = {
 		// console.log(req)
 		pool.getConnection(function(err,connection){
 			if(err) {
-				console.log("建立连接失败")
+				console.log(err,"建立连接失败")
 			} else{
 				console.log("建立连接成功")
 				// 获取前台传过来的参数
 				var param = req.query ||req.params;
 				// 建立连接，请求登录
 				// var sqlStr = 'SELECT * FROM userinfo WHERE `username` = '+param.username+' AND `password` = '+param.password+''
-				connection.query(sql.login,[param.username,param.password],function(err,result){
-					
+				connection.query(sql.login,[param.username,param.password],function(err,result){		
 					if(err){
 						console.log("查询失败",err)
 					}else{
@@ -48,6 +47,30 @@ module.exports = {
 						}
 						// 已json形式把操作结果传给前台页面
 					 	jsonWrite(res, result);
+						// 释放连接
+						connection.release();
+					}
+				})
+			}
+		})
+	},
+	getPayReal:function(req,res,next){
+		pool.getConnection(function(err, connection){
+			if(err){
+				console.log('失败')
+			}else{
+				var param = req.query || req.params;
+				connection.query(sql.getPayReal,[param.startDate,param.endDate],function(err,result){
+					if(err){
+						console.log(err,'查询失败')
+					}else{
+						console.log('查询成功')
+						result = {
+							data:result,
+							code:'1'
+						}
+						// 已json形式把操作结果传给前台页面
+						jsonWrite(res, result);
 						// 释放连接
 						connection.release();
 					}
