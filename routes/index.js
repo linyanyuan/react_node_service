@@ -15,4 +15,12 @@ router.get('/api/login',function(req,res,next){
 router.get('/api/getPayReal',function(req,res,next){
 	login.getPayReal(req,res,next)
 })
+// 记账
+router.post('/api/queryAccount',function(req,res,next){
+	login.queryAccount(req,res,next)
+})
+//删除一条记录
+router.get('/api/deleteAccount',function(req,res,next){
+	login.deleteAccount(req,res,next)
+})
 module.exports = router;

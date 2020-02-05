@@ -2,6 +2,7 @@ var mysql = require('mysql');
 var config = require('../conf/db.js');
 var utils = require('../utils/util.js');
 var sql = require('./loginsql.js');
+var accountSql = require('../src/account/accountSql.js');// 记账sql
 //使用mysql 连接池
 var pool = mysql.createPool(utils.extend({},config.mysql));
 
@@ -16,11 +17,11 @@ var jsonWrite = function(res,req){
 		res.json(req)
 	}
 }
-
 module.exports = {
 	login:function(req,res,next){
 		// console.log(req)
 		pool.getConnection(function(err,connection){
+			console.log(err,connection)
 			if(err) {
 				console.log(err,"建立连接失败")
 			} else{
@@ -77,6 +78,62 @@ module.exports = {
 				})
 			}
 		})
-	}
+	},
+	// 记账接口
+    queryAccount:function(req,res,next){
+        pool.getConnection(function(err, connection){
+			if(err){
+				console.log('失败')
+			}else{
+				
+				var param = req.body || req.params;
+				connection.query(accountSql.queryAccount,
+					[param.type,param.time,param.date,param.message,param.pay,param.typeName],
+					function(err,result){
+					if(err){
+						console.log(err,'查询失败')
+					}else{
+						console.log('查询成功')
+						result = {
+							data:result,
+							msg:'添加成功',
+							code:'1'
+						}
+						// 已json形式把操作结果传给前台页面
+						jsonWrite(res, result);
+						// 释放连接
+						connection.release();
+					}
+				})
+			}
+		})
+	},
+	// 删除一条
+	deleteAccount:function(req,res,next){
+        pool.getConnection(function(err, connection){
+			if(err){
+				console.log('失败')
+			}else{
+				var param = req.query || req.params;
+				connection.query(accountSql.deleteAccount,
+					[param.typeId],
+					function(err,result){
+					if(err){
+						console.log(err,'查询失败')
+					}else{
+						console.log('查询成功')
+						result = {
+							msg:'删除成功',
+							code:'1'
+						}
+						// 已json形式把操作结果传给前台页面
+						jsonWrite(res, result);
+						// 释放连接
+						connection.release();
+					}
+				})
+			}
+		})
+	},
 }
 
