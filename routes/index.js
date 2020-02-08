@@ -23,4 +23,12 @@ router.post('/api/queryAccount',function(req,res,next){
 router.get('/api/deleteAccount',function(req,res,next){
 	login.deleteAccount(req,res,next)
 })
+// 修改一条记录
+router.get('/api/updateAccount',function(req,res,next){
+	login.updateAccount(req,res,next)
+})
+//获取统计
+router.get('/api/queryStatistics',function(req,res,next){
+	login.queryStatistics(req,res,next)
+})
 module.exports = router;
